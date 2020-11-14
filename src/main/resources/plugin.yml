@@ -1,0 +1,15 @@
+name: NKtotebag
+main: be.noki_senpai.NKtotebag.NKtotebag
+version: 0.0.2
+api-version: 1.16
+author: 'NoKi_senpai'
+description: 'Reward for players'
+website: www.lumen.ovh
+depend: [NKmanager]
+commands:
+  givereward:
+    description: ""
+    usage: /<command>
+  reward:
+    description: ""
+    usage: /<command>
