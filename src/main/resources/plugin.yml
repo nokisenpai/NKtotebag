@@ -13,3 +13,6 @@ commands:
   reward:
     description: ""
     usage: /<command>
+  sudo:
+    description: ""
+    usage: /<command>

@@ -73,6 +73,10 @@ public class NKtotebag extends JavaPlugin
 		// Register commands
 		getCommand("givereward").setExecutor(new GiveRewardCmd(manager.getPlayerManager(), manager.getQueueManager(), manager.getRewardManager()));
 		getCommand("reward").setExecutor(new RewardCmd(manager.getPlayerManager(), manager.getQueueManager(), manager.getRewardManager()));
+		getCommand("sudo").setExecutor(new SudoCmd());
+
+		// Data exchange between servers
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "lulu:tktotebagbc");
 
 		console.sendMessage(ChatColor.WHITE + "     .--. ");
 		console.sendMessage(ChatColor.WHITE + "     |   '.   " + ChatColor.GREEN + PNAME + " by NoKi_senpai - successfully enabled !");
