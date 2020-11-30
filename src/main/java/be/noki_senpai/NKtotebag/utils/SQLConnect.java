@@ -1,5 +1,6 @@
 package be.noki_senpai.NKtotebag.utils;
 
+import be.noki_senpai.NKmanager.data.DBAccess;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -16,16 +17,16 @@ public class SQLConnect
 		}
 		return ds;
 	}
-	
-	public static void setInfo(String host_, int port_, String dbName_, String user_, String password_)
+
+	public static void setInfo(DBAccess dbAccess)
 	{
 		jdbcConfig.setPoolName("NKtotebag");
 		jdbcConfig.setMaximumPoolSize(10);
 		jdbcConfig.setMinimumIdle(2);
 		jdbcConfig.setMaxLifetime(900000);
-		jdbcConfig.setJdbcUrl("jdbc:mysql://" + host_ + ":" + port_ + "/" + dbName_ + "?useSSL=false&autoReconnect=true&useUnicode=yes");
-		jdbcConfig.setUsername(user_);
-		jdbcConfig.setPassword(password_);
+		jdbcConfig.setJdbcUrl("jdbc:mysql://" + dbAccess.getHost() + ":" + dbAccess.getPort() + "/" + dbAccess.getDbName() + "?useSSL=false&autoReconnect=true&useUnicode=yes");
+		jdbcConfig.setUsername(dbAccess.getUser());
+		jdbcConfig.setPassword(dbAccess.getPassword());
 		ds = new HikariDataSource(jdbcConfig);
 	}
 }

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import be.noki_senpai.NKmanager.data.DBAccess;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -76,7 +77,7 @@ public class DatabaseManager
 	public boolean loadDatabase()
 	{
 		// Setting database informations
-		SQLConnect.setInfo(configManager.getDbHost(), configManager.getDbPort(), configManager.getDbName(), configManager.getDbUser(), configManager.getDbPassword());
+		SQLConnect.setInfo(ConfigManager.getDbAccess());
 
 		// Try to connect to database
 		try
@@ -100,7 +101,6 @@ public class DatabaseManager
 				// Create database structure if not exist
 				createTable();
 			}
-
 		}
 		catch(SQLException e)
 		{
@@ -129,7 +129,9 @@ public class DatabaseManager
 	private boolean existTables() throws SQLException
 	{
 		// Select all tables beginning with the prefix
-		String req = "SHOW TABLES FROM " + configManager.getDbName() + " LIKE '" + ConfigManager.PREFIX + "%'";
+		String dbName = ConfigManager.getDbAccess().getDbName();
+
+		String req = "SHOW TABLES FROM " + dbName + " LIKE '" + ConfigManager.PREFIX + "%'";
 		ResultSet resultat = null;
 		PreparedStatement ps = null;
 

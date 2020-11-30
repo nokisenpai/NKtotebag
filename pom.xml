@@ -6,7 +6,7 @@
 
     <groupId>NKtotebag</groupId>
     <artifactId>NKtotebag</artifactId>
-    <version>0.1.2</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -46,8 +46,14 @@
             <version>1.7.26</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>NKmanagerAPI</groupId>
+            <artifactId>NKmanagerAPI</artifactId>
+            <version>1.0.1</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/NKmanagerAPI-1.0.1.jar</systemPath>
+        </dependency>
     </dependencies>
-
 
     <build>
         <defaultGoal>clean package install</defaultGoal>

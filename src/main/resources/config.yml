@@ -1,25 +1,17 @@
-# NKsort
+# NKtotebag
 
 # MySQL connection (required)
-use-mysql: false
-table-prefix: NKtotebag_
+auto-config-mysql: false
+
 host: localhost
 port: 3306
 dbName: minecraft_dev
 user: root
-password: 
+password:
 
+table-prefix: NKtotebag_
 
 # Options
 
-# The same name gave to Bungee config
-server-name: 'world'
-
 # Does the plugin reset fly time in sql db?
 sql-reset-flytime: false
-
-# Number max home per rank
-ranks:
-  member: 1
-  vip: 2
-  admin: 5

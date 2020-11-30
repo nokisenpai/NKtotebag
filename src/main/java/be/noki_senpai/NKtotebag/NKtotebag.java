@@ -1,5 +1,6 @@
 package be.noki_senpai.NKtotebag;
 
+import be.noki_senpai.NKmanager.api.NKmanagerAPI;
 import be.noki_senpai.NKtotebag.cmd.*;
 import be.noki_senpai.NKtotebag.completers.GiveRewardCompleter;
 import be.noki_senpai.NKtotebag.completers.RewardCompleter;
@@ -7,14 +8,11 @@ import be.noki_senpai.NKtotebag.listeners.PlayerConnectionListener;
 import be.noki_senpai.NKtotebag.listeners.ProtectedItemListener;
 import be.noki_senpai.NKtotebag.listeners.TotebagListener;
 import be.noki_senpai.NKtotebag.managers.Manager;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 
 public class NKtotebag extends JavaPlugin
 {
@@ -22,6 +20,7 @@ public class NKtotebag extends JavaPlugin
 	private Manager manager = null;
 	private ConsoleCommandSender console = null;
 	private static NKtotebag plugin = null;
+	private static NKmanagerAPI nkManagerApi = null;
 
 	// Fired when plugin is first enabled
 	@Override public void onEnable()
@@ -40,6 +39,13 @@ public class NKtotebag extends JavaPlugin
 			return;
 		}
 
+		if(!setupNKManagerAPI())
+		{
+			console.sendMessage(ChatColor.DARK_RED + PNAME + " Can't get NKmanager api !");
+			disablePlugin();
+			return;
+		}
+
 		// Load configuration
 		if(!manager.getConfigManager().loadConfig())
 		{
@@ -53,13 +59,10 @@ public class NKtotebag extends JavaPlugin
 			disablePlugin();
 			return;
 		}
-
 		manager.getRewardManager().loadData();
 
 		// Load homes for online players
 		manager.getPlayerManager().loadPlayer();
-
-
 
 		// Register listeners
 		getServer().getPluginManager().registerEvents(new PlayerConnectionListener(manager.getPlayerManager(), manager.getQueueManager(), manager.getRewardManager()), this);
@@ -100,6 +103,10 @@ public class NKtotebag extends JavaPlugin
 	{
 		return plugin;
 	}
+	public static NKmanagerAPI getNKmanagerAPI()
+	{
+		return nkManagerApi;
+	}
 
 	// ######################################
 	// Disable this plugin
@@ -117,5 +124,25 @@ public class NKtotebag extends JavaPlugin
 	public boolean checkNKmanager()
 	{
 		return getServer().getPluginManager().getPlugin("NKmanager").isEnabled();
+	}
+
+	// ######################################
+	// Get NKmanager API
+	// ######################################
+	private boolean setupNKManagerAPI()
+	{
+		if(getServer().getPluginManager().getPlugin("NKmanager") == null)
+		{
+			System.out.println("ya pas nkmanager");
+			return false;
+		}
+		RegisteredServiceProvider<NKmanagerAPI> rsp = getServer().getServicesManager().getRegistration(NKmanagerAPI.class);
+		if(rsp == null)
+		{
+			System.out.println("ya pas l'interface");
+			return false;
+		}
+		nkManagerApi = rsp.getProvider();
+		return nkManagerApi != null;
 	}
 }
