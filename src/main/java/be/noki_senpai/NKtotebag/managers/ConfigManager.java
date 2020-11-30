@@ -1,5 +1,7 @@
 package be.noki_senpai.NKtotebag.managers;
 
+import be.noki_senpai.NKmanager.data.DBAccess;
+import be.noki_senpai.NKmanager.data.NKServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -12,14 +14,10 @@ public class ConfigManager
 	private ConsoleCommandSender console = null;
 	private FileConfiguration config = null;
 
-	private String dbHost = null;
-	private int dbPort = 3306;
-	private String dbName = null;
-	private String dbUser = null;
-	private String dbPassword = null;
+	private static DBAccess dbAccess = new DBAccess();
 
 	public static String PREFIX = null;
-	public static String SERVERNAME = null;
+	public static NKServer SERVERNAME = null;
 	public static Boolean SQLRESETFLYTIME = false;
 
 	// Constructor
@@ -32,25 +30,26 @@ public class ConfigManager
 	public boolean loadConfig()
 	{
 		// Check if "use-mysql" is to true. Plugin only use MySQL database.
-		if(!config.getBoolean("use-mysql", true))
+		if(config.getBoolean("auto-config-mysql", true))
 		{
-			console.sendMessage(ChatColor.DARK_RED + NKtotebag.PNAME
-					+ " Disabled because this plugin only use MySQL database. Please set to true the 'use-mysql' field in config.yml");
-			return false;
+			// Get database access informations
+			dbAccess = NKtotebag.getNKmanagerAPI().getDBAccess();
 		}
-
-		// Get database access informations
-		dbHost = config.getString("host");
-		dbPort = config.getInt("port");
-		dbName = config.getString("dbName");
-		dbUser = config.getString("user");
-		dbPassword = config.getString("password");
+		else
+		{
+			// Get database access informations
+			dbAccess.setHost(config.getString("host"));
+			dbAccess.setPort(config.getInt("port"));
+			dbAccess.setDbName(config.getString("dbName"));
+			dbAccess.setUser(config.getString("user"));
+			dbAccess.setPassword(config.getString("password"));
+		}
 
 		// Get prefix used for table name on database
 		PREFIX = config.getString("table-prefix", "NKtotebag_");
 
 		// Get server name gave to bungeecord config
-		SERVERNAME = config.getString("server-name", "world");
+		SERVERNAME = NKtotebag.getNKmanagerAPI().getNKServer();
 
 		// Get server name gave to bungeecord config
 		SQLRESETFLYTIME = config.getBoolean("sql-reset-flytime", false);
@@ -62,28 +61,8 @@ public class ConfigManager
 	// Getters (only)
 	// ######################################
 
-	public String getDbHost()
+	public static DBAccess getDbAccess()
 	{
-		return dbHost;
-	}
-
-	public int getDbPort()
-	{
-		return dbPort;
-	}
-
-	public String getDbName()
-	{
-		return dbName;
-	}
-
-	public String getDbUser()
-	{
-		return dbUser;
-	}
-
-	public String getDbPassword()
-	{
-		return dbPassword;
+		return dbAccess;
 	}
 }

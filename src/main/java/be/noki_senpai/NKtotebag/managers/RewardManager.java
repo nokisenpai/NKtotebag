@@ -293,7 +293,7 @@ public class RewardManager
 			{
 				String[] args = resultat.getString("data").split("#");
 				String worldName = args[1];
-				if(ConfigManager.SERVERNAME.equalsIgnoreCase(args[0]) && !worldName.equalsIgnoreCase("null"))
+				if(ConfigManager.SERVERNAME.getName().equalsIgnoreCase(args[0]) && !worldName.equalsIgnoreCase("null"))
 				{
 					int x = Integer.parseInt(args[2]);
 					int z = Integer.parseInt(args[3]);
