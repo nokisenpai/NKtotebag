@@ -11,6 +11,7 @@ import be.noki_senpai.NKtotebag.managers.Manager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -65,9 +66,12 @@ public class NKtotebag extends JavaPlugin
 		manager.getPlayerManager().loadPlayer();
 
 		// Register listeners
-		getServer().getPluginManager().registerEvents(new PlayerConnectionListener(manager.getPlayerManager(), manager.getQueueManager(), manager.getRewardManager()), this);
+		//getServer().getPluginManager().registerEvents(new PlayerConnectionListener(manager.getPlayerManager(), manager.getQueueManager(), manager.getRewardManager()), this);
 		getServer().getPluginManager().registerEvents(new TotebagListener(manager.getPlayerManager(), manager.getRewardManager(), manager.getQueueManager()), this);
 		getServer().getPluginManager().registerEvents(new ProtectedItemListener(manager.getPlayerManager()), this);
+
+		// Register API NKManager Event
+		nkManagerApi.registerEvent("PlayerJoinEvent", new PlayerConnectionListener(manager.getPlayerManager(), manager.getQueueManager())::PlayerJoinEvent);
 
 		// Set tabulation completers
 		getCommand("givereward").setTabCompleter(new GiveRewardCompleter(manager.getPlayerManager()));

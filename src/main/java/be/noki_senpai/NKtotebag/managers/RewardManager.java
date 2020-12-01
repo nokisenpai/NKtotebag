@@ -633,7 +633,7 @@ public class RewardManager
 		date.set(Calendar.HOUR_OF_DAY, 1);
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.SECOND, 0);
-		timer.schedule(new FlyTimerTask(this), date.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+		timer.schedule(new FlyTimerTask(this), date.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) ;
 	}
 
 	public void resetFlyTimer()

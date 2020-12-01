@@ -2,51 +2,47 @@ package be.noki_senpai.NKtotebag.listeners;
 
 import be.noki_senpai.NKtotebag.managers.PlayerManager;
 import be.noki_senpai.NKtotebag.managers.QueueManager;
-import be.noki_senpai.NKtotebag.managers.RewardManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import be.noki_senpai.NKtotebag.NKtotebag;
-import org.bukkit.scheduler.BukkitRunnable;;
+import java.util.function.Function;
 
-public class PlayerConnectionListener implements Listener
+public class PlayerConnectionListener
 {
 	private PlayerManager playerManager = null;
-	private RewardManager rewardManager = null;
+	private QueueManager queueManager = null;
 
-	public PlayerConnectionListener(PlayerManager playerManager, QueueManager queueManager, RewardManager rewardManager)
+	public PlayerConnectionListener(PlayerManager playerManager, QueueManager queueManager)
 	{
 		this.playerManager = playerManager;
-		this.rewardManager = rewardManager;
+		this.queueManager = queueManager;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void PlayerJoinEvent(final PlayerJoinEvent event) 
+	public void PlayerJoinEvent(PlayerJoinEvent event)
 	{
-		new BukkitRunnable()
+		queueManager.addToQueue(new Function()
 		{
-			@Override public void run()
+			@Override
+			public Object apply(Object o)
 			{
 				playerManager.addPlayer(event.getPlayer());
-
+				return null;
 			}
-		}.runTaskLaterAsynchronously(NKtotebag.getPlugin(), 20);
+		});
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerQuitEvent(final PlayerQuitEvent event) 
+	public void onPlayerQuitEvent(PlayerQuitEvent event)
 	{
 		String playerName = event.getPlayer().getName();
-		new BukkitRunnable()
+		queueManager.addToQueue(new Function()
 		{
-			@Override public void run()
+			@Override
+			public Object apply(Object o)
 			{
 				playerManager.getPlayer(playerName).saveRewardedItem();
 				playerManager.delPlayer(event.getPlayer().getName());
+				return null;
 			}
-		}.runTaskAsynchronously(NKtotebag.getPlugin());
+		});
 	}
 }
